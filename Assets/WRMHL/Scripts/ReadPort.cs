@@ -54,7 +54,7 @@ public class ReadPort : MonoBehaviour
     {
         string value = sp.ReadLine(); //Read the information
         string[] vec3 = value.Split(',');
-        sensor = int.Parse(vec3[1])/100;
+        sensor = float.Parse(vec3[1])/100;
         power = float.Parse(vec3[0])/100;
         buttonPress1 = float.Parse(vec3[2]);
         buttonPress2 = float.Parse(vec3[3]);
