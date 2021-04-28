@@ -85,16 +85,12 @@ public class CharacterControls : MonoBehaviour
             global_light_lum.intensity -= 0.005f;
             global_light_color.r -= 0.005f;
             global_light_color.g -= 0.005f;
-            global_light_color.r = global_light_color.r < 0.2f ? 0.2f : global_light_color.r;
-            global_light_color.g = global_light_color.g < 0.2f ? 0.2f : global_light_color.g;
         }
         if (Input.GetKey(KeyCode.C))
         {
             global_light_lum.intensity += 0.005f;
             global_light_color.r += 0.005f;
             global_light_color.g += 0.005f;
-            global_light_color.r = global_light_color.r > 1 ? 1 : global_light_color.r;
-            global_light_color.g = global_light_color.g > 1 ? 1 : global_light_color.g;
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -111,6 +107,10 @@ public class CharacterControls : MonoBehaviour
             global_light_color.r = read.sensor;
         }
 
+        global_light_color.r = global_light_color.r > 1 ? 1 : global_light_color.r;
+        global_light_color.g = global_light_color.g > 1 ? 1 : global_light_color.g;
+        global_light_color.r = global_light_color.r < 0.2f ? 0.2f : global_light_color.r;
+        global_light_color.g = global_light_color.g < 0.2f ? 0.2f : global_light_color.g;
         global_light_lum.intensity = global_light_lum.intensity > 1 ? 1 : global_light_lum.intensity;
         global_light_lum.intensity = global_light_lum.intensity < 0.2f ? 0.2f : global_light_lum.intensity;
         global_light_lum.color = global_light_color;
