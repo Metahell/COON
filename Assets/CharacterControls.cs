@@ -31,6 +31,7 @@ public class CharacterControls : MonoBehaviour
     [SerializeField] Camera cam;
     private int coins;
     private float min_y_pos;
+    private ReadPort read;
     // Start is called before the first frame update
     void Start()
     {
@@ -41,12 +42,17 @@ public class CharacterControls : MonoBehaviour
         lantern_lum = lantern.GetComponent<Light2D>();
         global_light_color = global_light_lum.color;
         min_y_pos = -25;
+        read = gameObject.GetComponent<ReadPort>();
     }
 
     // Update is called once per frame
     void Update()
     {
         mouvementVector = (Vector3.up * Input.GetAxisRaw("Vertical") + Vector3.right * Input.GetAxisRaw("Horizontal")).normalized;
+        if (read.buttonPress1 > 0 || read.buttonPress2 > 0 ||read.buttonPress3 > 0 ||read.buttonPress3 > 0 || read.buttonPress4 > 0)
+        {
+            mouvementVector = (Vector3.left * read.buttonPress4 + Vector3.right * read.buttonPress3 + Vector3.up * read.buttonPress1).normalized;
+        }
         if (!can_jump)
         {
             mouvementVector.y = 0;

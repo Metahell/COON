@@ -21,8 +21,8 @@ If you need speed and low latency take a look to wrmhlReadLatest.
 public class ReadPort : MonoBehaviour
 {
     int CMD;
-    public float power;
-    public int sensor;
+    public float power; //intensité diode
+    public float sensor; //intensité capteur
     public bool jumpPress = false;
     public float buttonPress1 = 0;
     public float buttonPress2 = 0;
@@ -54,8 +54,8 @@ public class ReadPort : MonoBehaviour
     {
         string value = sp.ReadLine(); //Read the information
         string[] vec3 = value.Split(',');
-        sensor = int.Parse(vec3[1]);
-        power = float.Parse(vec3[0]);
+        sensor = int.Parse(vec3[1])/100;
+        power = float.Parse(vec3[0])/100;
         buttonPress1 = float.Parse(vec3[2]);
         buttonPress2 = float.Parse(vec3[3]);
         buttonPress3 = float.Parse(vec3[4]);
