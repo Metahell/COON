@@ -12,6 +12,16 @@ public class lanternManager : MonoBehaviour
     private Transform lantern_pos;
     public GameObject global_light;
     private Light2D global_light_lum;
+    [Range(-2, 2)]
+    [SerializeField] float min_lantern_intensity;
+    [Range(-2, 2)]
+    [SerializeField] float max_lantern_intensity;
+    [Range(0.2f, 1)]
+    [SerializeField] float min_global_intensity;
+    [Range(0.2f, 1)]
+    [SerializeField] float max_global_intensity;
+    [SerializeField] bool fade_with_light;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,41 +37,79 @@ public class lanternManager : MonoBehaviour
     {
         col.enabled = true;
 
-        if ( (Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) < 2.58f ))
+        if (fade_with_light)
         {
-            if (lantern_lum.intensity > 0.5f)
+            if ((Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) < 2.58f))
             {
-                tmp.a = (Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) - 0.60f) / 2.58f;
-                if (Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) < 1)
+                if (lantern_lum.intensity > max_lantern_intensity)
                 {
-                    col.enabled = false;
+                    tmp.a = (Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) - 0.60f) / 2.58f;
+                    if (Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) < 1)
+                    {
+                        col.enabled = false;
+                    }
                 }
-            }
-            else if (lantern_lum.intensity < -0.5f)
-            {
-                tmp.a = 1 -(Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) - 0.60f) / 2.58f; ;
-                col.enabled = true;
+                else if (lantern_lum.intensity < min_lantern_intensity)
+                {
+                    tmp.a = 1 - (Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) - 0.60f) / 2.58f; ;
+                    col.enabled = true;
+                }
+                else
+                {
+
+                    tmp.a = 1.2f - (global_light_lum.intensity);
+                    if (global_light_lum.intensity > max_global_intensity)
+                    {
+                        col.enabled = false;
+                    }
+                }
             }
             else
             {
-
                 tmp.a = 1.2f - (global_light_lum.intensity);
-                if (global_light_lum.intensity > 0.8f)
+                if (global_light_lum.intensity > max_global_intensity)
                 {
                     col.enabled = false;
                 }
+
             }
-        }
-        else
+        } else
         {
-            tmp.a = 1.2f-(global_light_lum.intensity);
-            if (global_light_lum.intensity > 0.8f)
+            if ((Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) < 2.58f))
             {
-                col.enabled = false;
+                if (lantern_lum.intensity < min_lantern_intensity)
+                {
+                    tmp.a = (Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) - 0.60f) / 2.58f;
+                    if (Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) < 1)
+                    {
+                        col.enabled = false;
+                    }
+                }
+                else if (lantern_lum.intensity > max_lantern_intensity)
+                {
+                    tmp.a = 1 - (Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) - 0.60f) / 2.58f; ;
+                    col.enabled = true;
+                }
+                else
+                {
+
+                    tmp.a = 0.2f + (global_light_lum.intensity);
+                    if (global_light_lum.intensity < min_global_intensity)
+                    {
+                        col.enabled = false;
+                    }
+                }
             }
+            else
+            {
+                tmp.a = 0.2f + (global_light_lum.intensity);
+                if (global_light_lum.intensity < min_global_intensity)
+                {
+                    col.enabled = false;
+                }
 
+            }
         }
-
 
         col.transform.gameObject.GetComponent<SpriteRenderer>().color = tmp;
     }
