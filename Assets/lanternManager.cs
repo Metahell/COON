@@ -13,13 +13,13 @@ public class lanternManager : MonoBehaviour
     public GameObject global_light;
     private Light2D global_light_lum;
     [Range(-2, 2)]
-    [SerializeField] float min_lantern_intensity;
+    [SerializeField] float min_lantern_intensity = 0;
     [Range(-2, 2)]
-    [SerializeField] float max_lantern_intensity;
+    [SerializeField] float max_lantern_intensity = 0.5f;
     [Range(0.2f, 1)]
-    [SerializeField] float min_global_intensity;
+    [SerializeField] float min_global_intensity = 0.4f;
     [Range(0.2f, 1)]
-    [SerializeField] float max_global_intensity;
+    [SerializeField] float max_global_intensity = 0.8f;
     [SerializeField] bool fade_with_light;
 
     // Start is called before the first frame update
@@ -43,7 +43,10 @@ public class lanternManager : MonoBehaviour
             {
                 if (lantern_lum.intensity > max_lantern_intensity)
                 {
-                    tmp.a = (Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) - 0.60f) / 2.58f;
+                    if (global_light_lum.intensity < max_global_intensity)
+                    {
+                        tmp.a = (Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) - 0.60f) / 2.58f;
+                    }
                     if (Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) < 1)
                     {
                         col.enabled = false;
@@ -51,7 +54,10 @@ public class lanternManager : MonoBehaviour
                 }
                 else if (lantern_lum.intensity < min_lantern_intensity)
                 {
-                    tmp.a = 1 - (Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) - 0.60f) / 2.58f; ;
+                    if (global_light_lum.intensity > min_global_intensity)
+                    {
+                        tmp.a = 1 - (Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) - 0.60f) / 2.58f;
+                    }
                     col.enabled = true;
                 }
                 else
@@ -79,7 +85,10 @@ public class lanternManager : MonoBehaviour
             {
                 if (lantern_lum.intensity < min_lantern_intensity)
                 {
-                    tmp.a = (Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) - 0.60f) / 2.58f;
+                    if (global_light_lum.intensity > min_global_intensity)
+                    {
+                        tmp.a = (Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) - 0.60f) / 2.58f;
+                    }
                     if (Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) < 1)
                     {
                         col.enabled = false;
@@ -87,7 +96,10 @@ public class lanternManager : MonoBehaviour
                 }
                 else if (lantern_lum.intensity > max_lantern_intensity)
                 {
-                    tmp.a = 1 - (Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) - 0.60f) / 2.58f; ;
+                    if (global_light_lum.intensity < max_global_intensity)
+                    {
+                        tmp.a = 1 - (Vector3.Distance(lantern_pos.position, col.ClosestPoint(lantern_pos.position)) - 0.60f) / 2.58f;
+                    }
                     col.enabled = true;
                 }
                 else

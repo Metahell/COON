@@ -28,6 +28,9 @@ public class CharacterControls : MonoBehaviour
     public GameObject global_light;
     private Light2D global_light_lum;
     public Color global_light_color;
+    [SerializeField] Camera cam;
+    private int coins;
+    private float min_y_pos;
     // Start is called before the first frame update
     void Start()
     {
@@ -37,6 +40,7 @@ public class CharacterControls : MonoBehaviour
         global_light_lum = global_light.GetComponent<Light2D>();
         lantern_lum = lantern.GetComponent<Light2D>();
         global_light_color = global_light_lum.color;
+        min_y_pos = -25;
     }
 
     // Update is called once per frame
@@ -47,19 +51,20 @@ public class CharacterControls : MonoBehaviour
         {
             mouvementVector.y = 0;
         }
-        if (transform.position.y < -50)
+        if (transform.position.y < min_y_pos)
         {
             rigi.velocity = Vector2.zero;
             rigi.angularVelocity = 0;
             transform.position = pos_def;
+            cam.transform.position = new Vector3(pos_def.x, cam.transform.position.y, cam.transform.position.z);
         }
 
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.E))
         {
             lantern_lum.intensity += 0.01f;
         }
 
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.A))
         {
             lantern_lum.intensity -= 0.01f;
         }
@@ -88,43 +93,72 @@ public class CharacterControls : MonoBehaviour
         global_light_lum.intensity = global_light_lum.intensity > 1 ? 1 : global_light_lum.intensity;
         global_light_lum.intensity = global_light_lum.intensity < 0.2f ? 0.2f : global_light_lum.intensity;
         global_light_lum.color = global_light_color;
+
+
+
     }
 
     private void FixedUpdate()
     {
-        motionVector = new Vector3(mouvementVector.x * maxVelocity,1.65f* mouvementVector.y * maxVelocity *(1+ Mathf.Abs(mouvementVector.x)*0.65f), 0);
+        motionVector = new Vector3(mouvementVector.x * maxVelocity, 1.65f * mouvementVector.y * maxVelocity * (1 + Mathf.Abs(mouvementVector.x) * 0.65f), 0);
         if (motionVector.x < 0)
         {
             transform.localScale = new Vector3(-0.5f, transform.localScale.y, transform.localScale.z);
+            if (transform.position.x < cam.transform.position.x)
+            {
+                if (Mathf.Abs(transform.position.x - cam.transform.position.x) > 1)
+                {
+                    cam.transform.position = new Vector3(transform.position.x + 1, cam.transform.position.y, cam.transform.position.z);
+                }
+
+            }
         }
         else if (motionVector.x > 0)
         {
             transform.localScale = new Vector3(0.5f, transform.localScale.y, transform.localScale.z);
+            if (transform.position.x > cam.transform.position.x)
+            {
+                if (Mathf.Abs(transform.position.x - cam.transform.position.x) > 1)
+                {
+                    cam.transform.position = new Vector3(transform.position.x - 1, cam.transform.position.y, cam.transform.position.z);
+                }
+            }
         }
         float lerpSmooth = rigi.velocity.magnitude < motionVector.magnitude ? acceleration : decceleration;
         if (!can_jump)
         {
-            motionVector = new Vector3(motionVector.x,rigi.velocity.y,motionVector.z);
+            motionVector = new Vector3(motionVector.x, rigi.velocity.y, motionVector.z);
         }
         rigi.velocity = Vector3.Lerp(rigi.velocity, motionVector, lerpSmooth / 20);
-        rigi.velocity += new Vector2(0,mouvementVector.y);
+        rigi.velocity += new Vector2(0, mouvementVector.y);
     }
 
-    //private void OnCollisionEnter2D(Collision2D collision)
-    //{
-    //    foreach (ContactPoint2D contact in collision.contacts)
-    //    {
-    //        test = contact.normal.normalized;
-    //        if (contact.normal.normalized == new Vector2(0,1))
-    //        {
-    //            can_jump = true;
-    //        }
-    //        if (contact.normal.normalized == new Vector2(1, 0) || contact.normal.normalized == new Vector2(-1, 0))
-    //        {
-    //        }
-    //        Debug.DrawRay(contact.point, contact.normal, Color.white,10);
-    //    }
-    //}
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.transform.gameObject.CompareTag("Coin"))
+        {
+            coins++;
+            print("win");
+            switch (coins)
+            {
+                case 1:
+                    min_y_pos = -50;
+                    transform.position = new Vector3(-25.6f, -46.08f, 0);
+                    pos_def = transform.position;
+                    cam.transform.position = new Vector3(-25.6f, -46.08f, -10);
+                    break;
+                case 2:
+                    min_y_pos = -70;
+                    transform.position = new Vector3(-25.6f, -66.08f, 0);
+                    pos_def = transform.position;
+                    cam.transform.position = new Vector3(-25.6f, -66.08f, -10);
+                    break;
+
+            }
+        }
+    }
 
     //private void OnCollisionExit2D(Collision2D collision)
     //{
