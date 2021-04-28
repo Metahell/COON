@@ -32,6 +32,7 @@ public class CharacterControls : MonoBehaviour
     private int coins;
     private float min_y_pos;
     private ReadPort read;
+    private bool lock_lights = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -96,10 +97,23 @@ public class CharacterControls : MonoBehaviour
             global_light_color.g = global_light_color.g > 1 ? 1 : global_light_color.g;
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            lock_lights = !lock_lights;
+            print("Lock lights : " + lock_lights);
+        }
+
+        if (!lock_lights)
+        {
+            global_light_lum.intensity = read.sensor;
+            lantern_lum.intensity = read.power;
+            global_light_color.g = read.sensor;
+            global_light_color.r = read.sensor;
+        }
+
         global_light_lum.intensity = global_light_lum.intensity > 1 ? 1 : global_light_lum.intensity;
         global_light_lum.intensity = global_light_lum.intensity < 0.2f ? 0.2f : global_light_lum.intensity;
         global_light_lum.color = global_light_color;
-
 
 
     }
