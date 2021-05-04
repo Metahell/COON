@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
-
+using UnityEngine.SceneManagement;
 public class CharacterControls : MonoBehaviour
 {
+    private Transform m_currMovingPlatform;
     private Rigidbody2D rigi;
     private Vector3 mouvementVector = Vector3.zero;
     private Vector3 motionVector = Vector3.zero;
@@ -29,7 +30,7 @@ public class CharacterControls : MonoBehaviour
     private Light2D global_light_lum;
     public Color global_light_color;
     [SerializeField] Camera cam;
-    private int coins;
+    public int coins;
     private float min_y_pos;
     private ReadPort read;
     private bool lock_lights = false;
@@ -57,6 +58,10 @@ public class CharacterControls : MonoBehaviour
         if (!can_jump)
         {
             mouvementVector.y = 0;
+        }
+        if (Input.GetKey(KeyCode.R) || read.buttonPress2 > 0)
+        {
+            SceneManager.LoadScene(coins);
         }
         if (transform.position.y < min_y_pos)
         {
@@ -161,23 +166,22 @@ public class CharacterControls : MonoBehaviour
         {
             coins++;
             print("win");
-            switch (coins)
-            {
-                case 1:
-                    min_y_pos = -50;
-                    transform.position = new Vector3(-25.6f, -46.08f, 0);
-                    pos_def = transform.position;
-                    cam.transform.position = new Vector3(-25.6f, -46.08f, -10);
-                    break;
-                case 2:
-                    min_y_pos = -70;
-                    transform.position = new Vector3(-25.6f, -66.08f, 0);
-                    pos_def = transform.position;
-                    cam.transform.position = new Vector3(-25.6f, -66.08f, -10);
-                    break;
-
-            }
+            SceneManager.LoadScene(coins);
         }
+    }
+    void OnCollisionEnter2D(Collision2D coll)
+    {
+        if (coll.gameObject.tag == "MovingSurface")
+        {
+            m_currMovingPlatform = coll.gameObject.transform;
+            transform.SetParent(m_currMovingPlatform);
+        }
+    }
+    void OnCollisionExit2D(Collision2D coll)
+    {
+        if (coll.gameObject.tag == "MovingSurfaceCollider")
+            m_currMovingPlatform = null;
+            transform.parent = null;
     }
 
     //private void OnCollisionExit2D(Collision2D collision)
