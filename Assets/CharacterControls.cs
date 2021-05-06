@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
 using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 public class CharacterControls : MonoBehaviour
 {
     private Transform m_currMovingPlatform;
     private Rigidbody2D rigi;
+    [SerializeField]
+    private AudioSource jumpsound;
+    [SerializeField]
+    private AudioSource coinsound;
     private Vector3 mouvementVector = Vector3.zero;
     private Vector3 motionVector = Vector3.zero;
     [Header("Movement Parameters")]
@@ -54,6 +59,10 @@ public class CharacterControls : MonoBehaviour
         if (read.buttonPress1 > 0 || read.buttonPress2 > 0 ||read.buttonPress3 > 0 ||read.buttonPress3 > 0 || read.buttonPress4 > 0)
         {
             mouvementVector = (Vector3.left * read.buttonPress4 + Vector3.right * read.buttonPress3 + Vector3.up * read.buttonPress1).normalized;
+        }
+        if (can_jump && (read.buttonPress1>0||Input.GetKey(KeyCode.Z)))
+        {
+            jumpsound.Play();
         }
         if (!can_jump)
         {
@@ -166,7 +175,8 @@ public class CharacterControls : MonoBehaviour
         {
             coins++;
             print("win");
-            SceneManager.LoadScene(coins);
+            coinsound.Play();
+            StartCoroutine(LoadNewLevel(coins));
         }
     }
     void OnCollisionEnter2D(Collision2D coll)
@@ -184,6 +194,11 @@ public class CharacterControls : MonoBehaviour
             transform.parent = null;
     }
 
+    IEnumerator LoadNewLevel(int level)
+    {
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene(level);
+    }
     //private void OnCollisionExit2D(Collision2D collision)
     //{
     //    if (rigi.velocity.y != 0)
