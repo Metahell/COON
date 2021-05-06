@@ -47,7 +47,7 @@ public class LightMove : MonoBehaviour
         }
         if (global_light_lum.intensity > min_global_intensity && cur != dest)
         {
-            transform.position = Vector3.SmoothDamp(transform.position, dest,ref velocity, 10);
+            transform.position = Vector3.SmoothDamp(transform.position, dest,ref velocity, 10-speed);
         }
         tmpm.a = 1f - (global_light_lum.intensity);
         moon.GetComponent<SpriteRenderer>().color = tmpm;
