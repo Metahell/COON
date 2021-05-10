@@ -135,28 +135,30 @@ public class CharacterControls : MonoBehaviour
     private void FixedUpdate()
     {
         motionVector = new Vector3(mouvementVector.x * maxVelocity, 1.65f * mouvementVector.y * maxVelocity * (1 + Mathf.Abs(mouvementVector.x) * 0.65f), 0);
+        if (transform.position.x < cam.transform.position.x)
+        {
+            if (Mathf.Abs(transform.position.x - cam.transform.position.x) > 1)
+            {
+                cam.transform.position = new Vector3(transform.position.x + 1, cam.transform.position.y, cam.transform.position.z);
+            }
+
+        }
+        if (transform.position.x > cam.transform.position.x)
+        {
+            if (Mathf.Abs(transform.position.x - cam.transform.position.x) > 1)
+            {
+                cam.transform.position = new Vector3(transform.position.x - 1, cam.transform.position.y, cam.transform.position.z);
+            }
+        }
         if (motionVector.x < 0)
         {
             transform.localScale = new Vector3(-0.5f, transform.localScale.y, transform.localScale.z);
-            if (transform.position.x < cam.transform.position.x)
-            {
-                if (Mathf.Abs(transform.position.x - cam.transform.position.x) > 1)
-                {
-                    cam.transform.position = new Vector3(transform.position.x + 1, cam.transform.position.y, cam.transform.position.z);
-                }
-
-            }
+            
         }
         else if (motionVector.x > 0)
         {
             transform.localScale = new Vector3(0.5f, transform.localScale.y, transform.localScale.z);
-            if (transform.position.x > cam.transform.position.x)
-            {
-                if (Mathf.Abs(transform.position.x - cam.transform.position.x) > 1)
-                {
-                    cam.transform.position = new Vector3(transform.position.x - 1, cam.transform.position.y, cam.transform.position.z);
-                }
-            }
+            
         }
         float lerpSmooth = rigi.velocity.magnitude < motionVector.magnitude ? acceleration : decceleration;
         if (!can_jump)
