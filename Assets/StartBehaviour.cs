@@ -17,7 +17,7 @@ public class StartBehaviour : MonoBehaviour
     {
         if (read.buttonPress1 > 0 || Input.GetKey(KeyCode.Z))
         {
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(1);
         }
     }
 }

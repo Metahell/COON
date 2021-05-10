@@ -1,0 +1,10 @@
+19 avril : Définition du concept de la manette et du jeu basé sur la luminosité.
+26 avril : Début de la création du jeu, définition des mécaniques principales.
+27 avril : Début de la création de la manette, choix des composants et codage sous Arduino.
+28 avril : Création et assemblage de la manette, elle est fonctionnelle et complète.
+29 avril : Ajout d'assets au jeu, les mécaniques principales ont été implémentées.
+30 avril : Jonction Jeu/Manette effectuée. Les informations de la manette sont disponibles en temps réel sur Unity, le joueur peut utiliser sa manette et la luminosité de sa pièce pour intéragir avec les éléments du jeu.
+Ajout de niveaux supplémentaires en cours… 
+3 Mai : Nouveaux niveaux ajoutés
+5 Mai : Nouvelle mécanique de jeu : plateforme mobile affectées par la luminosité ambiante, écran de démarrage
+8 Mai : Complexification des niveaux
